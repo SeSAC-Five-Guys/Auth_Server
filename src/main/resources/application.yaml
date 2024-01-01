@@ -4,3 +4,7 @@ spring:
     group:
       dev: dev
       prod: prod
+
+logging:
+  level:
+    org.hibernate.type.descriptor.sql: trace
