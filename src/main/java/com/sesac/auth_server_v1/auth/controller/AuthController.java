@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +52,7 @@ public class AuthController {
 	private final RedisUtils redisUtils;
 	@PostMapping("/member")
 	public Mono<ResponseEntity<ResDto>> login(
-		HttpServletResponse response, HttpServletRequest request,
+		HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest,
 		@Valid @RequestBody LoginDto loginDto
 	){
 		return webClientUtils.getWithParam(memberLoginUrl, loginDto, ResDto.class)
@@ -80,7 +81,7 @@ public class AuthController {
 				Cookie accessTokenCookie = new Cookie(cookieHeader, token);
 				accessTokenCookie.setHttpOnly(true);
 				accessTokenCookie.setPath("/");
-				response.addCookie(accessTokenCookie);
+				httpServletResponse.addCookie(accessTokenCookie);
 
 				if(result.getErrorStatus() == ErrorStatus.INTERNAL_SERVER_ERROR){
 					return Mono.error(new ServiceLogicException(ErrorStatus.INTERNAL_SERVER_ERROR));
@@ -88,5 +89,21 @@ public class AuthController {
 
 				return Mono.just(new ResponseEntity<>(result, httpStatus));
 			});
+	}
+
+	@DeleteMapping("/member")
+	public ResponseEntity<ResDto> logout(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest){
+		redisUtils.deleteData(
+			jwtUtils.getEmail(
+				jwtUtils.getAccessTokenInCookie(httpServletRequest)
+			));
+
+		Cookie cookie = new Cookie(cookieHeader, null);
+		cookie.setMaxAge(0);
+		cookie.setPath("/");
+		cookie.setHttpOnly(true);
+
+		httpServletResponse.addCookie(cookie);
+		return new ResponseEntity<>(ResDto.builder().success(true).build(), HttpStatus.OK);
 	}
 }

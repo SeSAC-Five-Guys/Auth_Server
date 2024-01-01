@@ -14,20 +14,20 @@ public class ExceptionController {
 	@ExceptionHandler(ServiceLogicException.class)
 	public ResponseEntity<ResDto> serviceLogicExceptionHandler(ServiceLogicException e){
 		log.error(e.getMessage());
-		log.error(e.getCause());
+		log.error(e.getStackTrace());
 		return exceptionToRes(e.getErrorStatus());
 	}
 
 	@ExceptionHandler(RuntimeException.class)
 	public ResponseEntity<ResDto> runtimeExceptionHandler(RuntimeException e) {
 		log.error(e.getMessage());
-		log.error(e.getCause());
+		log.error(e.getStackTrace());
 		return exceptionToRes(ErrorStatus.RUNTIME_EXCEPTION);
 	}
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ResDto> exceptionHandler(Exception e) {
 		log.error(e.getMessage());
-		log.error(e.getCause());
+		log.error(e.getStackTrace());
 		return exceptionToRes(ErrorStatus.INTERNAL_SERVER_ERROR);
 	}
 	private ResponseEntity<ResDto> exceptionToRes(ErrorStatus errorStatus){
