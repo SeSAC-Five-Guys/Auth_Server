@@ -37,7 +37,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/v1/auth")
 public class AuthController {
 
-	@Value("http://"+"${variable.memberReadAddr}" + "${variable.memberAPI}")
+	@Value("${variable.memberReadAddr}" + "${variable.memberAPI}")
 	private String memberLoginUrl;
 
 	@Value("${variable.jwt.cookieHeader}")
