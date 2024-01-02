@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.sesac.auth_server_v1.auth.service.JwtUtils;
+import com.sesac.auth_server_v1.auth.service.RedisUtils;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/v1/admin")
+@RequestMapping("/api/v1/authorization/admin")
 public class AdminController {
 	@Value("${variable.jwt.cookieHeader}")
 	private String cookieHeader;
@@ -42,6 +43,7 @@ public class AdminController {
 
 
 	private final JwtUtils jwtUtils;
+	private final RedisUtils redisUtils;
 	@GetMapping("/five_guys/kibana")
 	public void redirectKibana(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws Exception{
 
@@ -86,12 +88,13 @@ public class AdminController {
 	public void notAuthAdminRedirecting(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws Exception{
 		String userToken = jwtUtils.getAccessTokenInCookie(httpServletRequest);
 
-		if(!(jwtUtils.verifyTokenInRedis(userToken) && jwtUtils.adminAuthorization(userToken) && jwtUtils.adminAuthorization(userToken))){
+		if(!(jwtUtils.verifyTokenInRedis(userToken) && jwtUtils.adminAuthorization(userToken))){
+			redisUtils.deleteData(jwtUtils.getEmail(userToken));
+
 			Cookie cookie = new Cookie(cookieHeader, null);
 			cookie.setMaxAge(0);
 			cookie.setPath("/");
 			cookie.setHttpOnly(true);
-
 			httpServletResponse.addCookie(cookie);
 
 			httpServletResponse.sendRedirect(UriComponentsBuilder.fromUriString(clientAddr)

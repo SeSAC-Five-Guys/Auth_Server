@@ -27,7 +27,7 @@ spring:
 variable:
   clientAddr: http://localhost:3000
   memberReadAddr: http://localhost:8082
-  memberAPI: /v1/members/member
+  memberAPI: /api/v1/members/member
 
   kibana: http://localhost:5601
   kafka-ui: http://localhost:8086

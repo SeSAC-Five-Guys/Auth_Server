@@ -18,6 +18,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -40,6 +41,9 @@ public class JwtUtils {
 
 	@Value("${variable.role.admin}")
 	private String roleAdmin;
+
+	@Value("${variable.role.user}")
+	private String roleUser;
 
 	private final RedisUtils redisUtils;
 	@PostConstruct
@@ -87,6 +91,15 @@ public class JwtUtils {
 		String userRole = getRole(userToken);
 
 		if (!userRole.equals(roleAdmin)){
+			throw new ServiceLogicException(ErrorStatus.ACCESS_TOKEN_ERROR);
+		}
+		return true;
+	}
+
+	public boolean userAuthorization(String userToken){
+		String userRole = getRole(userToken);
+
+		if(!(userRole.equals(roleAdmin) || userRole.equals(roleUser))){
 			throw new ServiceLogicException(ErrorStatus.ACCESS_TOKEN_ERROR);
 		}
 		return true;
