@@ -1,0 +1,3 @@
+[submodule "src/main/resources/Security"]
+	path = src/main/resources/Security
+	url = https://github.com/SeSAC-Five-Guys/Auth_Server_Security.git
