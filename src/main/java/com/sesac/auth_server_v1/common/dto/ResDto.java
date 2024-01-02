@@ -23,7 +23,7 @@ public class ResDto<T>{
 	private T data;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private T tmpSvcRes;
+	private String tmpSvcRes;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private ErrorStatus errorStatus;

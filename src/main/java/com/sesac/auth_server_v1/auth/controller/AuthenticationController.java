@@ -21,8 +21,6 @@ import com.sesac.auth_server_v1.auth.service.JwtUtils;
 import com.sesac.auth_server_v1.auth.service.RedisUtils;
 import com.sesac.auth_server_v1.auth.service.WebClientUtils;
 import com.sesac.auth_server_v1.common.dto.ResDto;
-import com.sesac.auth_server_v1.common.exception.ErrorStatus;
-import com.sesac.auth_server_v1.common.exception.ServiceLogicException;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,6 +55,16 @@ public class AuthenticationController {
 	){
 		return webClientUtils.getWithParam(memberLoginUrl, loginDto, ResDto.class)
 			.flatMap(result -> {
+				HttpStatus httpStatus =
+					result.getTmpSvcRes() != null
+						? HttpStatus.valueOf(Integer.parseInt(result.getTmpSvcRes())) : HttpStatus.OK;
+
+				result.setTmpSvcRes(null);
+
+				if(!(result.isSuccess())){
+					return Mono.just(new ResponseEntity<>(result, httpStatus));
+				}
+
 				ObjectMapper objectMapper = new ObjectMapper();
 				LoginResponseDto loginResponseDto = objectMapper.convertValue(result.getData(), LoginResponseDto.class);
 
@@ -69,28 +77,21 @@ public class AuthenticationController {
 				if(!(redisUtils.getData(email) == null)){
 					redisUtils.deleteData(email);
 				}
+
 				Map<String, String> redisSaveAuth = new HashMap<>();
 				redisSaveAuth.put("token", token);
 				redisSaveAuth.put("memberRole", memberRole);
 
 				redisUtils.setData(email, redisSaveAuth, accessTokenPeriod, TimeUnit.MILLISECONDS);
 
-				HttpStatus httpStatus = result.getTmpSvcRes() != null ? HttpStatus.valueOf((Integer) result.getTmpSvcRes()) : HttpStatus.OK;
-				result.setTmpSvcRes(null);
-
 				Cookie accessTokenCookie = new Cookie(cookieHeader, token);
 				accessTokenCookie.setHttpOnly(true);
 				accessTokenCookie.setPath("/");
 				httpServletResponse.addCookie(accessTokenCookie);
 
-				if(result.getErrorStatus() == ErrorStatus.INTERNAL_SERVER_ERROR){
-					return Mono.error(new ServiceLogicException(ErrorStatus.INTERNAL_SERVER_ERROR));
-				}
-
 				return Mono.just(new ResponseEntity<>(result, httpStatus));
 			});
 	}
-
 	@DeleteMapping("/member")
 	public ResponseEntity<ResDto> logout(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest){
 		redisUtils.deleteData(

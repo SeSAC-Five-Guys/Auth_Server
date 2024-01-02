@@ -12,7 +12,7 @@ public class LoginDto {
 	@NotBlank(message = "이메일 공백 포함 불가")
 	private String email;
 
-	@Pattern(regexp = "^[^!@#_]{5,12}$", message = "잘못된 비밀번호 형식")
+	@Pattern(regexp = "^(?=.*[0-9a-zA-Z!@#$%&])[-0-9a-zA-Z!@#$%&]{6,12}$", message = "잘못된 비밀번호 형식")
 	@NotBlank(message = "비밀번호 공백 포함 불가")
 	private String password;
 }
