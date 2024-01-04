@@ -1,11 +1,6 @@
 spring:
-  profiles:
-    active: dev
-    group:
-      dev: dev
-      docker: docker
-      prod: prod
-
-logging:
-  level:
-    org.hibernate.type.descriptor.sql: trace
+  config:
+    import:
+      - classpath:security/application-docker.yaml
+      - classpath:security/application-dev.yaml
+      - classpath:security/application.yaml
