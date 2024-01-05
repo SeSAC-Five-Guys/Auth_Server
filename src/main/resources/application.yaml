@@ -2,6 +2,7 @@
 spring:
   config:
     import:
+      - classpath:security/application-prod.yaml
       - classpath:security/application-docker.yaml
       - classpath:security/application-dev.yaml
       - classpath:security/application.yaml
