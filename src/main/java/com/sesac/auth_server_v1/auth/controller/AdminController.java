@@ -45,7 +45,7 @@ public class AdminController {
 
 	private final JwtUtils jwtUtils;
 	private final RedisUtils redisUtils;
-	@GetMapping("/five_guys/v1/kibana")
+	@GetMapping("/kibana")
 	public void redirectKibana(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws Exception{
 
 		notAuthAdminRedirecting(httpServletResponse, httpServletRequest);
@@ -55,7 +55,7 @@ public class AdminController {
 			.encode(StandardCharsets.UTF_8)
 			.toString());
 	}
-	@GetMapping("/five_guys/v1/grafana")
+	@GetMapping("/grafana")
 	public void redirectGrafana(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws Exception{
 
 		notAuthAdminRedirecting(httpServletResponse, httpServletRequest);
@@ -65,7 +65,7 @@ public class AdminController {
 			.encode(StandardCharsets.UTF_8)
 			.toString());
 	}
-	@GetMapping("/five_guys/v1/kafkaui")
+	@GetMapping("/kafkaui")
 	public void redirectKafka_UI(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws Exception{
 
 		notAuthAdminRedirecting(httpServletResponse, httpServletRequest);
@@ -75,7 +75,7 @@ public class AdminController {
 			.encode(StandardCharsets.UTF_8)
 			.toString());
 	}
-	@GetMapping("/five_guys/v1/argocd")
+	@GetMapping("/argocd")
 	public void redirectArgoCD(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws Exception{
 
 		notAuthAdminRedirecting(httpServletResponse, httpServletRequest);
