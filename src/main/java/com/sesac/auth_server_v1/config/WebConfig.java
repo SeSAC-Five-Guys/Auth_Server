@@ -1,11 +1,13 @@
 package com.sesac.auth_server_v1.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -23,24 +25,25 @@ public class WebConfig implements WebMvcConfigurer {
 	private final JwtInterceptor jwtInterceptor;
 
 	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
+	public FilterRegistrationBean<CorsFilter> corsFilter() {
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
 
 		// 개발 환경
-		config.addAllowedOrigin("*");
-
 		config.addAllowedOrigin(clientAddr);
 		config.addAllowedMethod("*");
 		config.addAllowedHeader("*");
 		config.setAllowCredentials(true);
 
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
 		source.registerCorsConfiguration("/**", config);
-		return source;
+		FilterRegistrationBean<CorsFilter> corsBean = new FilterRegistrationBean<>(new CorsFilter(source));
+		corsBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+		return corsBean;
 	}
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(jwtInterceptor)
-			//.addPathPatterns("/**")
-			.excludePathPatterns("/**");
+			.addPathPatterns("/**")
+			.excludePathPatterns("/api/v1/authentication/member");
 	}
 }
