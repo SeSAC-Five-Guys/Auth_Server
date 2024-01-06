@@ -1,8 +1,16 @@
-
 spring:
   config:
     import:
       - classpath:security/application-prod.yaml
       - classpath:security/application-docker.yaml
       - classpath:security/application-dev.yaml
-      - classpath:security/application.yaml
+  profiles:
+    active: dev
+    group:
+      dev: dev
+      docker: docker
+      prod: prod
+
+logging:
+  level:
+    org.hibernate.type.descriptor.sql: trace
