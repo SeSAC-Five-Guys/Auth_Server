@@ -11,7 +11,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.sesac.auth_server_v1.auth.service.JwtUtils;
 import com.sesac.auth_server_v1.auth.service.RedisUtils;
-import com.sesac.auth_server_v1.common.dto.ResDto;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -85,17 +84,6 @@ public class AdminController {
 			.encode(StandardCharsets.UTF_8)
 			.toString());
 	}
-
-	/*@GetMapping("/five_guys/v2/kibana")
-	public ResDto sendLinkKibana(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws Exception{
-		httpServletResponse = notAuthAdmin(httpServletResponse, httpServletRequest);
-	}
-	@GetMapping("/five_guys/v2/grafana")
-
-	@GetMapping("/five_guys/v2/kafkaui")
-
-	@GetMapping("/five_guys/v2/argocd")*/
-
 	public void notAuthAdminRedirecting(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws Exception{
 		String userToken = jwtUtils.getAccessTokenInCookie(httpServletRequest);
 
@@ -105,7 +93,6 @@ public class AdminController {
 			Cookie cookie = new Cookie(cookieHeader, null);
 			cookie.setMaxAge(0);
 			cookie.setPath("/");
-			cookie.setHttpOnly(true);
 			httpServletResponse.addCookie(cookie);
 
 			httpServletResponse.sendRedirect(UriComponentsBuilder.fromUriString(clientAddr)
@@ -113,22 +100,5 @@ public class AdminController {
 				.encode(StandardCharsets.UTF_8)
 				.toString());
 		}
-	}
-
-	public HttpServletResponse notAuthAdmin(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws Exception{
-		String userToken = jwtUtils.getAccessTokenInCookie(httpServletRequest);
-
-		if(!(jwtUtils.verifyTokenInRedis(userToken) && jwtUtils.adminAuthorization(userToken))){
-			redisUtils.deleteData(jwtUtils.getEmail(userToken));
-
-			Cookie cookie = new Cookie(cookieHeader, null);
-			cookie.setMaxAge(0);
-			cookie.setPath("/");
-			cookie.setHttpOnly(true);
-			httpServletResponse.addCookie(cookie);
-
-			return httpServletResponse;
-		}
-		return null;
 	}
 }

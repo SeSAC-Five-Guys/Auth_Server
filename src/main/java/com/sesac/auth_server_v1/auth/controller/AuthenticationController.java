@@ -85,7 +85,6 @@ public class AuthenticationController {
 				redisUtils.setData(email, redisSaveAuth, accessTokenPeriod, TimeUnit.MILLISECONDS);
 
 				Cookie accessTokenCookie = new Cookie(cookieHeader, token);
-				accessTokenCookie.setHttpOnly(true);
 				accessTokenCookie.setPath("/");
 				httpServletResponse.addCookie(accessTokenCookie);
 
@@ -102,8 +101,6 @@ public class AuthenticationController {
 		Cookie cookie = new Cookie(cookieHeader, null);
 		cookie.setMaxAge(0);
 		cookie.setPath("/");
-		cookie.setHttpOnly(true);
-
 		httpServletResponse.addCookie(cookie);
 		return new ResponseEntity<>(ResDto.builder().success(true).build(), HttpStatus.OK);
 	}

@@ -93,15 +93,6 @@ public class JwtUtils {
 		}
 		return true;
 	}
-
-	public boolean userAuthorization(String userToken){
-		String userRole = getRole(userToken);
-
-		if(!(userRole.equals(roleAdmin) || userRole.equals(roleUser))){
-			throw new ServiceLogicException(ErrorStatus.ACCESS_TOKEN_ERROR);
-		}
-		return true;
-	}
 	public String getAccessTokenInCookie(HttpServletRequest httpServletRequest){
 		Cookie[] cookies = httpServletRequest.getCookies();
 
