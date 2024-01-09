@@ -44,6 +44,6 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(jwtInterceptor)
 			.addPathPatterns("/**")
-			.excludePathPatterns("/api/auth/v1/authentication/member");
+			.excludePathPatterns("k8s-fiveguys-20459e34d7-506921170.ap-northeast-2.elb.amazonaws.com/api/auth/v1/authentication/member");
 	}
 }
