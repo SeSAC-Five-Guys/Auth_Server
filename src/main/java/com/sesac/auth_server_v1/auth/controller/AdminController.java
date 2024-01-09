@@ -21,7 +21,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/authorization/admin")
+@RequestMapping("/api/auth/v1/authorization/admin")
 public class AdminController {
 	@Value("${variable.jwt.cookieHeader}")
 	private String cookieHeader;

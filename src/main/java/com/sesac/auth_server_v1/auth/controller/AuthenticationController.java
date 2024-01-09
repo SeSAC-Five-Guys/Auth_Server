@@ -33,7 +33,7 @@ import reactor.core.publisher.Mono;
 @Log4j2
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/authentication")
+@RequestMapping("/api/auth/v1/authentication")
 public class AuthenticationController {
 
 	@Value("${variable.memberReadAddr}" + "${variable.memberAPI}")
