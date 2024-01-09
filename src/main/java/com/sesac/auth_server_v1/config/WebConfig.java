@@ -30,7 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
 		CorsConfiguration config = new CorsConfiguration();
 
 		// 개발 환경
-		config.addAllowedOrigin("*");
+		config.addAllowedOrigin(clientAddr);
 		config.addAllowedMethod("*");
 		config.addAllowedHeader("*");
 		config.setAllowCredentials(true);
