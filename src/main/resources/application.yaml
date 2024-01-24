@@ -5,7 +5,7 @@ spring:
       - classpath:security/application-docker.yaml
       - classpath:security/application-dev.yaml
   profiles:
-    active: prod
+    active: dev
     group:
       dev: dev
       docker: docker
